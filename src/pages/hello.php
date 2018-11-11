@@ -1,3 +1,1 @@
-<?php $name = $request->get('name', 'Pretty'); ?>
-
-Hello <?= htmlspecialchars($name, ENT_QUOTES); ?>
+Hello <?= htmlspecialchars(isset($name) ? $name : 'Bob', ENT_QUOTES); ?>

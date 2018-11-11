@@ -9,15 +9,16 @@ $request = Request::createFromGlobals();
 $response = new Response;
 
 $map = [
-    '/hello' => '/../src/pages/hello.php',
-    '/bye' => '/../src/pages/bye.php'
+    '/hello' => 'hello',
+    '/bye' => 'bye'
 ];
 
-$pathInfo = $request->getPathInfo();
+$path = $request->getPathInfo();
 
-if (isset($map[$pathInfo])) {
+if (isset($map[$path])) {
     ob_start();
-    include __DIR__ . $map[$pathInfo];
+    extract($request->query->all(), EXTR_SKIP);
+    include sprintf(__DIR__ .'/../src/pages/%s.php', $map[$path]);
     $response->setContent(ob_get_clean());
 }
 else {
