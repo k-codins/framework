@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Simplex\Framework;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
@@ -33,18 +34,7 @@ $path = $request->getPathInfo();
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
 
-try {
-    $request->attributes->add($matcher->match($request->getPathInfo()));
-    //get controller from request argument '_controller'
-    $controller = $controllerResolver->getController($request);
-    //get arguments inject necessary arguments when it type-hinted correctly.
-    $arguments = $argumentResolver->getArguments($request, $controller);
-
-    $response = call_user_func_array($controller, $arguments);
-} catch (ResourceNotFoundException $exception) {
-    $response = new Response('Not found', 404);
-} catch (Exception $exception) {
-    $response = new Response('An error occured', 500);
-}
+$framework = new Framework($matcher, $controllerResolver, $argumentResolver);
+$response = $framework->handle($request);
 
 $response->send();
