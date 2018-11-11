@@ -39,7 +39,4 @@ try {
     $response = new Response('An error occured', 500);
 }
 
-$generator = new UrlGenerator($routes, $context);
-$generator->generate('hello', ['name' => 'Robin']);
-
 $response->send();
